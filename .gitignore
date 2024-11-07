@@ -1,7 +1,6 @@
-target/
-Secrets*.toml
-/target
 .shuttle*
-
-# Ignore the static folder
+dist/
+node_modules/
+Secrets*.toml
 static/
+target/
