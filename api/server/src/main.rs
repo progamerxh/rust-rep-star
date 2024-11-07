@@ -21,12 +21,14 @@ async fn server() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Cl
         .await
         .map_err(CustomError::new)?;
 
-    let pool = actix_web::web::Data::new(pool);
+    let testimonial_repository =
+        api_lib::testimonial_repository::PostgresTestimonialRepository::new(pool);
+    let testimonial_repository = actix_web::web::Data::new(testimonial_repository);
 
     tracing::info!("Database connection pool created successfully!");
 
     let config = move |cfg: &mut ServiceConfig| {
-        cfg.app_data(pool)
+        cfg.app_data(testimonial_repository)
             .configure(api_lib::health::service)
             .configure(api_lib::testimonials::service);
     };
