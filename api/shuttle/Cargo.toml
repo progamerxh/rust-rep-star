@@ -17,4 +17,3 @@ sqlx = { version = "0.8", default-features = false, features = [
     "chrono",
     "json",
 ] }
-anyhow = "1.0.44"

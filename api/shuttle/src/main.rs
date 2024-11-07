@@ -1,6 +1,8 @@
 use actix_web::{get, web::ServiceConfig};
 use shuttle_actix_web::ShuttleActixWeb;
+use shuttle_runtime::CustomError;
 use sqlx::postgres::PgPoolOptions;
+use sqlx::Executor;
 
 #[get("/")]
 async fn hello_world() -> &'static str {
@@ -21,16 +23,12 @@ async fn actix_web() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send +
         .max_connections(1)
         .connect("postgresql://postgres:postgres@127.0.0.1/rep-star")
         .await
-        .map_err(|e| shuttle_runtime::Error::from(anyhow::Error::new(e)))?;
+        .map_err(CustomError::new)?;
 
-    // Make a simple query to return the given parameter (use a question mark `?` instead of `$1` for MySQL/MariaDB)
-    let row: (i64,) = sqlx::query_as("SELECT $1")
-        .bind(150_i64)
-        .fetch_one(&pool)
+    // initialize the database if not already initialized
+    pool.execute(include_str!("../../db/schema.sql"))
         .await
-        .map_err(|e| shuttle_runtime::Error::from(anyhow::Error::new(e)))?;
-
-    assert_eq!(row.0, 150);
+        .map_err(CustomError::new)?;
 
     Ok(config.into())
 }
