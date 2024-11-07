@@ -2,3 +2,6 @@ target/
 Secrets*.toml
 /target
 .shuttle*
+
+# Ignore the static folder
+static/

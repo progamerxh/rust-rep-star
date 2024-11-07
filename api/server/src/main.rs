@@ -1,7 +1,14 @@
-use actix_web::web::ServiceConfig;
+use actix_files::NamedFile;
+use actix_web::web::{self, ServiceConfig};
+use actix_web::{get, Responder};
 use shuttle_actix_web::ShuttleActixWeb;
 use shuttle_runtime::CustomError;
 use sqlx::{postgres::PgPoolOptions, Executor};
+
+#[get("/")]
+async fn index() -> impl Responder {
+    NamedFile::open_async("static/index.html").await
+}
 
 #[shuttle_runtime::main]
 async fn server() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
@@ -29,13 +36,17 @@ async fn server() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Cl
     tracing::info!("Database connection pool created successfully!");
 
     let config = move |cfg: &mut ServiceConfig| {
-        cfg.app_data(testimonial_repository)
-            .configure(api_lib::health::service)
-            .configure(
-                api_lib::testimonials::service::<
-                    api_lib::testimonial_repository::PostgresTestimonialRepository,
-                >,
-            );
+        cfg.service(
+            web::scope("/api")
+                .app_data(testimonial_repository)
+                .configure(api_lib::health::service)
+                .configure(
+                    api_lib::testimonials::service::<
+                        api_lib::testimonial_repository::PostgresTestimonialRepository,
+                    >,
+                ),
+        )
+        .service(index);
     };
 
     Ok(config.into())
