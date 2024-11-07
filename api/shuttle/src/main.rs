@@ -1,25 +1,8 @@
-use actix_web::{get, web::ServiceConfig};
+use actix_web::web::ServiceConfig;
+use api_lib::health::{hello_world, version};
 use shuttle_actix_web::ShuttleActixWeb;
 use shuttle_runtime::CustomError;
 use sqlx::postgres::PgPoolOptions;
-
-#[get("/")]
-async fn hello_world() -> &'static str {
-    "Hello World!"
-}
-
-#[get("/version")]
-async fn version(db: actix_web::web::Data<sqlx::PgPool>) -> String {
-    tracing::info!("Getting version");
-    let result: Result<String, sqlx::Error> = sqlx::query_scalar("SELECT version()")
-        .fetch_one(db.get_ref())
-        .await;
-
-    match result {
-        Ok(version) => version,
-        Err(e) => format!("Error: {:?}", e),
-    }
-}
 
 #[shuttle_runtime::main]
 async fn actix_web() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
@@ -35,7 +18,7 @@ async fn actix_web() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send +
 
     let pool = actix_web::web::Data::new(pool);
 
-    tracing::info!("Database connection pool created successfully.");
+    tracing::info!("Database connection pool created successfully!");
 
     let config = move |cfg: &mut ServiceConfig| {
         cfg.app_data(pool).service(hello_world).service(version);

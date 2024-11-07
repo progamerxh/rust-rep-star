@@ -4,11 +4,12 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-actix-web = "4.3.1"
+api-lib = { path = "../lib" }
+actix-web = "4.9.0"
 shuttle-actix-web = "0.48.0"
 shuttle-runtime = "0.48.0"
-tokio = "1.26.0"
-sqlx = { version = "0.8", default-features = false, features = [
+tokio = "1.41.0"
+sqlx = { version = "0.8.2", default-features = false, features = [
     "tls-native-tls",
     "runtime-tokio",
     "macros",
@@ -17,4 +18,4 @@ sqlx = { version = "0.8", default-features = false, features = [
     "chrono",
     "json",
 ] }
-tracing = "0.1"
+tracing = "0.1.40"
