@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS "public"."metric_types" (
 );
 
 CREATE TABLE IF NOT EXISTS "public"."metrics" (
-    "id" uuid DEFAULT uuid_generate_v4() NOT NULL CONSTRAINT metrics_pkey PRIMARY KEY,
     "time" timestamp(3) NOT NULL,
     "metricTypeId" text NOT NULL,
     "value" float8 NOT NULL,
@@ -35,3 +34,4 @@ CREATE TABLE IF NOT EXISTS "public"."users" (
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS users_email_key ON public.users USING btree (email);
+CREATE INDEX IF NOT EXISTS metrics_time_key ON public.metrics USING btree (time);
