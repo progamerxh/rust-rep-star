@@ -1,5 +1,4 @@
 use actix_web::web::ServiceConfig;
-use api_lib::health::health;
 use shuttle_actix_web::ShuttleActixWeb;
 use shuttle_runtime::CustomError;
 use sqlx::{postgres::PgPoolOptions, Executor};
@@ -26,7 +25,7 @@ async fn actix_web() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send +
     tracing::info!("Database connection pool created successfully!");
 
     let config = move |cfg: &mut ServiceConfig| {
-        cfg.app_data(pool).service(health);
+        cfg.app_data(pool).configure(api_lib::health::service);
     };
 
     Ok(config.into())
