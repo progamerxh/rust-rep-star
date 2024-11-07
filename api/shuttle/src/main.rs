@@ -11,7 +11,8 @@ async fn actix_web() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send +
     //  etc.
     let pool = PgPoolOptions::new()
         .max_connections(1)
-        .connect("postgresql://tsdbadmin:u1ttq9i4o6ex24db@bhrhgjuo9r.m19kjwh83w.tsdb.cloud.timescale.com:39098/tsdb")
+        .connect("postgresql://postgres:postgres@localhost:5432/rep-star")
+        // .connect("postgresql://tsdbadmin:u1ttq9i4o6ex24db@bhrhgjuo9r.m19kjwh83w.tsdb.cloud.timescale.com:39098/tsdb")
         .await
         .map_err(CustomError::new)?;
 
@@ -25,7 +26,9 @@ async fn actix_web() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send +
     tracing::info!("Database connection pool created successfully!");
 
     let config = move |cfg: &mut ServiceConfig| {
-        cfg.app_data(pool).configure(api_lib::health::service);
+        cfg.app_data(pool)
+            .configure(api_lib::health::service)
+            .configure(api_lib::testimonials::service);
     };
 
     Ok(config.into())
