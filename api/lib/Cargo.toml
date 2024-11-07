@@ -17,3 +17,6 @@ sqlx = { version = "0.8.2", default-features = false, features = [
 ] }
 # tracing
 tracing = "0.1.40"
+
+[dev-dependencies]
+actix-rt = "2.10.0"
