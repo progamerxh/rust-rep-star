@@ -2,6 +2,7 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
+#[cfg_attr(feature = "backend", derive(sqlx::FromRow))]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Default)]
 pub struct MetricType {
     pub id: Uuid,
@@ -11,6 +12,7 @@ pub struct MetricType {
     pub updated_at: DateTime<Utc>,
 }
 
+#[cfg_attr(feature = "backend", derive(sqlx::FromRow))]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, PartialOrd, Default)]
 pub struct Metric {
     pub time: DateTime<Utc>,
@@ -20,6 +22,7 @@ pub struct Metric {
     pub updated_at: DateTime<Utc>,
 }
 
+#[cfg_attr(feature = "backend", derive(sqlx::FromRow))]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Default)]
 pub struct User {
     pub id: Uuid,
@@ -29,6 +32,7 @@ pub struct User {
     pub updated_at: DateTime<Utc>,
 }
 
+#[cfg_attr(feature = "backend", derive(sqlx::FromRow))]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, PartialOrd, Default)]
 pub struct Testimonial {
     pub id: Uuid,
@@ -39,6 +43,7 @@ pub struct Testimonial {
     pub updated_at: DateTime<Utc>,
 }
 
+#[cfg_attr(feature = "backend", derive(sqlx::FromRow))]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, PartialOrd, Default)]
 pub struct CreateTestimonial {
     pub content: String,

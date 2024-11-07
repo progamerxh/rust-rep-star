@@ -1,9 +1,15 @@
+mod postgres_testimonial_repository;
+
+pub use postgres_testimonial_repository::PostgresTestimonialRepository;
+
+use async_trait::async_trait;
 use shared::models::{CreateTestimonial, Testimonial};
 use uuid::Uuid;
+
 pub type TestimonialError = String;
 pub type TestimonialResult<T> = Result<T, TestimonialError>;
 
-#[async_trait::async_trait]
+#[async_trait]
 pub trait TestimonialRepository: Send + Sync + 'static {
     async fn get_testimonials(&self) -> TestimonialResult<Vec<Testimonial>>;
     async fn get_testimonial(&self, id: &Uuid) -> TestimonialResult<Testimonial>;

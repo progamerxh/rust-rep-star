@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 # shared
-shared = { path = "../../shared" }
+shared = { path = "../../shared", features = ["backend"] }
 # actix
 actix-web = "4.9.0"
 # database
@@ -25,3 +25,4 @@ uuid = { version = "1.11.0", features = ["serde", "v4", "js"] }
 
 [dev-dependencies]
 actix-rt = "2.10.0"
+
