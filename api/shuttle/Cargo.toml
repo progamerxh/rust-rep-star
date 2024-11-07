@@ -17,3 +17,4 @@ sqlx = { version = "0.8", default-features = false, features = [
     "chrono",
     "json",
 ] }
+tracing = "0.1"
