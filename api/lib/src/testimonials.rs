@@ -2,6 +2,12 @@ use actix_web::{
     web::{self, ServiceConfig},
     HttpResponse,
 };
+use shared::models::{CreateTestimonial, Testimonial};
+use uuid::Uuid;
+
+use crate::testimonial_repository::TestimonialRepository;
+
+type Repository = web::Data<Box<dyn TestimonialRepository>>;
 
 pub fn service(cfg: &mut ServiceConfig) {
     cfg.service(
@@ -19,22 +25,37 @@ pub fn service(cfg: &mut ServiceConfig) {
     );
 }
 
-async fn get_all() -> HttpResponse {
-    HttpResponse::Ok().finish()
+async fn get_all(repo: Repository) -> HttpResponse {
+    match repo.get_testimonials().await {
+        Ok(films) => HttpResponse::Ok().json(films),
+        Err(e) => HttpResponse::NotFound().body(format!("Internal server error: {:?}", e)),
+    }
 }
 
-async fn get() -> HttpResponse {
-    HttpResponse::Ok().finish()
+async fn get(testimonial_id: web::Path<Uuid>, repo: Repository) -> HttpResponse {
+    match repo.get_testimonial(&testimonial_id).await {
+        Ok(testimonial) => HttpResponse::Ok().json(testimonial),
+        Err(e) => HttpResponse::NotFound().body(format!("Internal server error: {:?}", e)),
+    }
 }
 
-async fn post() -> HttpResponse {
-    HttpResponse::Ok().finish()
+async fn post(testimonial: web::Json<CreateTestimonial>, repo: Repository) -> HttpResponse {
+    match repo.create_testimonial(&testimonial).await {
+        Ok(testimonial) => HttpResponse::Ok().json(testimonial),
+        Err(e) => HttpResponse::NotFound().body(format!("Internal server error: {:?}", e)),
+    }
 }
 
-async fn put() -> HttpResponse {
-    HttpResponse::Ok().finish()
+async fn put(testimonial: web::Json<Testimonial>, repo: Repository) -> HttpResponse {
+    match repo.update_testimonial(&testimonial).await {
+        Ok(testimonial) => HttpResponse::Ok().json(testimonial),
+        Err(e) => HttpResponse::NotFound().body(format!("Internal server error: {:?}", e)),
+    }
 }
 
-async fn delete() -> HttpResponse {
-    HttpResponse::Ok().finish()
+async fn delete(testimonial_id: web::Path<Uuid>, repo: Repository) -> HttpResponse {
+    match repo.delete_testimonial(&testimonial_id).await {
+        Ok(testimonial) => HttpResponse::Ok().json(testimonial),
+        Err(e) => HttpResponse::NotFound().body(format!("Internal server error: {:?}", e)),
+    }
 }

@@ -23,7 +23,10 @@ async fn server() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Cl
 
     let testimonial_repository =
         api_lib::testimonial_repository::PostgresTestimonialRepository::new(pool);
-    let testimonial_repository = actix_web::web::Data::new(testimonial_repository);
+
+    let testimonial_repository: actix_web::web::Data<
+        Box<dyn api_lib::testimonial_repository::TestimonialRepository>,
+    > = actix_web::web::Data::new(Box::new(testimonial_repository));
 
     tracing::info!("Database connection pool created successfully!");
 
