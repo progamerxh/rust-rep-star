@@ -1,30 +1,29 @@
 use crate::components::testimonial_list::TestimonialList;
+use crate::queries::testimonials::get_testimonials;
 use dioxus::prelude::*;
-use shared::models::Testimonial;
 
 #[component]
 pub fn TestimonialsPage() -> Element {
-    let testimonials: Vec<Testimonial> = vec![Testimonial {
-        content: "I had a great experience!".to_string(),
-        rating: 5.0,
-        created_at: "2024-11-07T09:50:19.585Z"
-            .parse()
-            .expect("failed to parse date"),
-        updated_at: "2024-11-07T09:50:19.585Z"
-            .parse()
-            .expect("failed to parse date"),
-        user_id: Some(uuid::Uuid::parse_str("00000000-0000-0000-0000-000000000001").unwrap()),
-        id: uuid::Uuid::parse_str("00000000-0000-0000-0000-000000000001").unwrap(),
-    }];
+    let testimonials = use_resource(move || get_testimonials());
 
-    rsx! {
-        div {
-            class: "p-4",
-            h1 {
-                class: "text-3xl font-bold",
-                "Testimonials"
+    // / check if the future is resolved
+    match &*testimonials.read_unchecked() {
+        Some(Ok(res)) => {
+            // if it is, render the stories
+            rsx! {
+                div { class: "p-4",
+                    h1 { class: "text-3xl font-bold", "Testimonials" }
+                    TestimonialList { testimonials: res.clone() }
+                }
             }
-            TestimonialList { testimonials: testimonials}
+        }
+        Some(Err(_)) => {
+            // if there was an error, render the error
+            rsx! { "An error occurred while fetching stories " }
+        }
+        None => {
+            // if the future is not resolved yet, render a loading message
+            rsx! { "Loading items" }
         }
     }
 }

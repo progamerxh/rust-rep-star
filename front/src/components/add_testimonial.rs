@@ -1,54 +1,54 @@
-#![allow(non_snake_case)]
-
+use crate::queries::testimonials::create_testimonial;
 use dioxus::prelude::*;
+use dioxus_logger::tracing::info;
+use shared::models::CreateTestimonial;
 
 #[component]
 pub fn AddTestimonial() -> Element {
     let mut content = use_signal(|| String::new());
     let mut rating = use_signal(|| 0.0);
 
-    let on_submit = move |_event: Event<FormData>| {
-        // Handle the submission logic here, e.g., send data to an API or update state
-        // Reset the form fields after submission
-        content.set(String::new());
-        rating.set(0.0);
+    let on_submit = move |_: Event<FormData>| {
+        spawn(async move {
+            if let Err(e) = create_testimonial(CreateTestimonial {
+                content: content.to_string(),
+                rating: *rating.write(),
+                user_id: None,
+            })
+            .await
+            {
+                info!("Failed to create testimonial: {:?}", e);
+            }
+
+            // Reset the form fields after submission
+            content.set(String::new());
+            rating.set(0.0);
+        });
+        ()
     };
 
     rsx! {
-        form {
-            class: "p-4",
-            onsubmit: on_submit,
-            div {
-                class: "mb-4",
-                label {
-                    class: "block text-gray-700",
-                    "Author:"
-                }
-                input {
-                    class: "border rounded w-full py-2 px-3 text-gray-700",
-                    r#type: "text",
-                    value: "{content}",
-                    oninput: move |e| content.set(e.value()),
-                    placeholder: "Enter author name"
-                }
-            }
-            div {
-                class: "mb-4",
-                label {
-                    class: "block text-gray-700",
-                    "Testimonial:"
-                }
+        form { class: "p-4", onsubmit: on_submit,
+            div { class: "mb-4",
+                label { class: "block text-gray-700", "Content:" }
                 textarea {
                     class: "border rounded w-full py-2 px-3 text-gray-700",
-                    value: "{rating}",
+                    value: "{content}",
                     oninput: move |e| content.set(e.value()),
+                    placeholder: "write your testimonial here"
+                }
+            }
+            div { class: "mb-4",
+                label { class: "block text-gray-700", "Rating:" }
+                input {
+                    class: "border rounded w-full py-2 px-3 text-gray-700",
+                    value: "{rating}",
+                    r#type: "number",
+                    oninput: move |e| rating.set(e.value().parse().unwrap_or(0.0)),
                     placeholder: "Enter testimonial content"
                 }
             }
-            button {
-                class: "bg-blue-500 text-white px-4 py-2 rounded",
-                "Submit"
-            }
+            button { class: "bg-blue-500 text-white px-4 py-2 rounded", "Submit" }
         }
     }
 }

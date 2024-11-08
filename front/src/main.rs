@@ -8,6 +8,7 @@ use dioxus_logger::tracing::{info, Level};
 
 mod components;
 mod pages;
+mod queries;
 
 #[derive(Clone, Routable, Debug, PartialEq)]
 pub enum Route {

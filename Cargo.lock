@@ -1520,6 +1520,7 @@ dependencies = [
  "shared",
  "uuid",
  "wasm-logger",
+ "web-sys",
 ]
 
 [[package]]
