@@ -2,23 +2,17 @@ use actix_files::Files;
 use actix_web::web::{self, ServiceConfig};
 use shuttle_actix_web::ShuttleActixWeb;
 use shuttle_runtime::CustomError;
-use sqlx::{postgres::PgPoolOptions, Executor};
+use sqlx::migrate::Migrator;
+use sqlx::postgres::PgPoolOptions;
+
+pub static MIGRATIONS: Migrator = sqlx::migrate!("../migrations");
 
 #[shuttle_runtime::main]
 async fn server() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
-    // Create a connection pool
-    //  for MySQL/MariaDB, use MySqlPoolOptions::new()
-    //  for SQLite, use SqlitePoolOptions::new()
-    //  etc.
     let pool = PgPoolOptions::new()
         .max_connections(10)
-        // .connect("postgresql://postgres:postgres@localhost:5432/rep-star")
-        .connect("postgresql://tsdbadmin:u1ttq9i4o6ex24db@bhrhgjuo9r.m19kjwh83w.tsdb.cloud.timescale.com:39098/tsdb")
-        .await
-        .map_err(CustomError::new)?;
-
-    // initialize the database if not already initialized
-    pool.execute(include_str!("../../db/schema.sql"))
+        .connect("postgresql://postgres:postgres@localhost:5432/rep-star")
+        // .connect("postgresql://tsdbadmin:u1ttq9i4o6ex24db@bhrhgjuo9r.m19kjwh83w.tsdb.cloud.timescale.com:39098/tsdb")
         .await
         .map_err(CustomError::new)?;
 
@@ -35,8 +29,16 @@ async fn server() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Cl
                 .app_data(testimonial_repository)
                 .configure(api_lib::health::service)
                 .configure(
-                    api_lib::testimonials::service::<
+                    api_lib::v1::testimonial::service::<
                         api_lib::testimonial_repository::PostgresTestimonialRepository,
+                    >,
+                )
+                .configure(
+                    api_lib::v1::user::service::<api_lib::user_repository::PostgresUserRepository>,
+                )
+                .configure(
+                    api_lib::v1::metric::service::<
+                        api_lib::metric_repository::PostgresMetricRepository,
                     >,
                 ),
         )

@@ -23,6 +23,13 @@ pub struct Metric {
 }
 
 #[cfg_attr(feature = "backend", derive(sqlx::FromRow))]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, PartialOrd, Default)]
+pub struct CreateMetric {
+    pub metric_type_id: Uuid,
+    pub value: f64,
+}
+
+#[cfg_attr(feature = "backend", derive(sqlx::FromRow))]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Default)]
 pub struct User {
     pub id: Uuid,
@@ -30,6 +37,13 @@ pub struct User {
     pub name: Option<String>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
+}
+
+#[cfg_attr(feature = "backend", derive(sqlx::FromRow))]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, PartialOrd, Default)]
+pub struct CreateUser {
+    pub email: String,
+    pub name: Option<String>,
 }
 
 #[cfg_attr(feature = "backend", derive(sqlx::FromRow))]
