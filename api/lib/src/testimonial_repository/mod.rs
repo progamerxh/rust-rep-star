@@ -1,10 +1,9 @@
-mod postgres_testimonial_repository;
-
-pub use postgres_testimonial_repository::PostgresTestimonialRepository;
-
 use async_trait::async_trait;
 use shared::models::{CreateTestimonial, Testimonial};
 use uuid::Uuid;
+
+pub use postgres_testimonial_repository::PostgresTestimonialRepository;
+mod postgres_testimonial_repository;
 
 pub type TestimonialError = String;
 pub type TestimonialResult<T> = Result<T, TestimonialError>;

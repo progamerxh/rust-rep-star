@@ -5,12 +5,12 @@ CREATE TABLE IF NOT EXISTS "public"."metric_types" (
     "name" text NOT NULL,
     "description" text,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMPTZ NOT NULL
+    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
 );
 
 CREATE TABLE IF NOT EXISTS "public"."metrics" (
     "time" TIMESTAMPTZ NOT NULL,
-    "metric_type_id" text NOT NULL,
+    "metric_type_id" uuid NOT NULL,
     "value" DOUBLE PRECISION NOT NULL,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS "public"."testimonials" (
     "id" uuid DEFAULT uuid_generate_v4() NOT NULL CONSTRAINT testimonials_pkey PRIMARY KEY,
     "content" text NOT NULL,
     "rating" DOUBLE PRECISION NOT NULL,
-    "user_id" text,
+    "user_id" uuid,
     "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

@@ -1,5 +1,5 @@
 [package]
-name = "api-rep-star"
+name = "api-actix"
 version = "0.1.0"
 edition = "2021"
 
@@ -12,6 +12,7 @@ shuttle-runtime = "0.48.0"
 # actixs
 actix-web = "4.9.0"
 tokio = "1.41.0"
+actix-cors = "0.7.0"
 # db
 sqlx = { version = "0.8.2", default-features = false, features = [
     "tls-native-tls",

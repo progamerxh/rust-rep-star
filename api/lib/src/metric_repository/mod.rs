@@ -1,4 +1,4 @@
-mod postgres_metric_repository;
+pub mod postgres_metric_repository;
 
 pub use postgres_metric_repository::PostgresMetricRepository;
 

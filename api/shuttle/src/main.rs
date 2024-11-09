@@ -17,9 +17,18 @@ async fn server() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Cl
         .map_err(CustomError::new)?;
 
     let testimonial_repository =
-        api_lib::testimonial_repository::PostgresTestimonialRepository::new(pool);
-
+        api_lib::testimonial_repository::PostgresTestimonialRepository::new(pool.clone());
     let testimonial_repository = actix_web::web::Data::new(testimonial_repository);
+
+    let metric_repository = api_lib::metric_repository::PostgresMetricRepository::new(pool.clone());
+    let metric_repository = actix_web::web::Data::new(metric_repository);
+
+    let user_repository = api_lib::user_repository::PostgresUserRepository::new(pool.clone());
+    let user_repository = actix_web::web::Data::new(user_repository);
+
+    let insight_repository =
+        api_lib::insight_repository::PostgresInsightRepository::new(pool.clone());
+    let insight_repository = actix_web::web::Data::new(insight_repository);
 
     tracing::info!("Database connection pool created successfully!");
 
@@ -27,6 +36,9 @@ async fn server() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Cl
         cfg.service(
             web::scope("/api")
                 .app_data(testimonial_repository)
+                .app_data(metric_repository)
+                .app_data(user_repository)
+                .app_data(insight_repository)
                 .configure(api_lib::health::service)
                 .configure(
                     api_lib::v1::testimonial::service::<
@@ -39,6 +51,11 @@ async fn server() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Cl
                 .configure(
                     api_lib::v1::metric::service::<
                         api_lib::metric_repository::PostgresMetricRepository,
+                    >,
+                )
+                .configure(
+                    api_lib::v1::insight::service::<
+                        api_lib::insight_repository::PostgresInsightRepository,
                     >,
                 ),
         )

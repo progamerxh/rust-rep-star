@@ -64,3 +64,9 @@ pub struct CreateTestimonial {
     pub rating: f64,
     pub user_id: Option<Uuid>,
 }
+
+#[cfg_attr(feature = "backend", derive(sqlx::FromRow))]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Default)]
+pub struct Insight {
+    pub test: String,
+}

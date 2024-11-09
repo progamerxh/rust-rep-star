@@ -7,6 +7,7 @@ use dioxus::prelude::*;
 use dioxus_logger::tracing::{info, Level};
 
 mod components;
+mod layouts;
 mod pages;
 mod queries;
 

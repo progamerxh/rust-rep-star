@@ -1,10 +1,9 @@
-mod postgres_user_repository;
-
-pub use postgres_user_repository::PostgresUserRepository;
-
 use async_trait::async_trait;
 use shared::models::{CreateUser, User};
 use uuid::Uuid;
+
+pub use postgres_user_repository::PostgresUserRepository;
+mod postgres_user_repository;
 
 pub type UserError = String;
 pub type UserResult<T> = Result<T, UserError>;

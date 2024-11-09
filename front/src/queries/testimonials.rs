@@ -6,7 +6,8 @@ pub static TESTIMONIAL_API: &str = "testimonials";
 fn testimonials_endpoint() -> String {
     let window = web_sys::window().expect("no global `window` exists");
     let location = window.location();
-    let host = location.host().expect("should have a host");
+    // let host = location.host().expect("should have a host");
+    let host = "localhost:8000";
     let protocol = location.protocol().expect("should have a protocol");
     format!(
         "{}//{}/{}/{}",

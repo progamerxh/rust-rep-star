@@ -8,7 +8,7 @@ pub fn AddTestimonial() -> Element {
     let mut content = use_signal(|| String::new());
     let mut rating = use_signal(|| 0.0);
 
-    let on_submit = move |_: Event<FormData>| {
+    let handle_submit = move |_: Event<FormData>| {
         spawn(async move {
             if let Err(e) = create_testimonial(CreateTestimonial {
                 content: content.read().clone(),
@@ -28,7 +28,7 @@ pub fn AddTestimonial() -> Element {
     };
 
     rsx! {
-        form { class: "p-4", onsubmit: on_submit,
+        form { class: "p-4", onsubmit: handle_submit,
             div { class: "mb-4",
                 label { class: "block text-gray-700", "Content:" }
                 textarea {

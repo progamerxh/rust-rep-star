@@ -1,7 +1,8 @@
 [workspace]
 members = [
     "api/lib",
-    "api/server", 
+    "api/shuttle", 
+    "api/actix",
     "front",
     "shared"
 ]
