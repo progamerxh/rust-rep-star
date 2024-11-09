@@ -40,7 +40,11 @@ async fn server() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Cl
                     >,
                 ),
         )
-        .service(Files::new("/", "static").index_file("index.html"));
+        .service(
+            Files::new("/", "static")
+                .show_files_listing()
+                .index_file("index.html"),
+        );
     };
 
     Ok(config.into())
