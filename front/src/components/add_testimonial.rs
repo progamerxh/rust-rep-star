@@ -11,8 +11,8 @@ pub fn AddTestimonial() -> Element {
     let on_submit = move |_: Event<FormData>| {
         spawn(async move {
             if let Err(e) = create_testimonial(CreateTestimonial {
-                content: content.to_string(),
-                rating: *rating.write(),
+                content: content.read().clone(),
+                rating: *rating.read(),
                 user_id: None,
             })
             .await
