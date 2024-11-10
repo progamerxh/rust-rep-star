@@ -7,6 +7,7 @@ use actix_web::{
     HttpResponse,
 };
 use serde::Deserialize;
+use shared::models::Insight;
 
 #[derive(Deserialize)]
 struct InsightQuery {
@@ -27,9 +28,10 @@ async fn get_all<R: InsightRepository, T: TestimonialRepository>(
     query: web::Query<InsightQuery>,
 ) -> HttpResponse {
     let duration = TimeDuration::from_str(&query.duration.clone().unwrap_or("day".to_string()));
+    let duration = duration.unwrap_or(TimeDuration::LastDay);
 
     let testimonials = match testimonial_repo
-        .get_testimonials_by_time_duration(duration.unwrap_or(TimeDuration::LastDay))
+        .get_testimonials_by_time_duration(duration)
         .await
     {
         Ok(t) => t,
@@ -39,8 +41,17 @@ async fn get_all<R: InsightRepository, T: TestimonialRepository>(
         }
     };
 
+    if testimonials.is_empty() {
+        return HttpResponse::Ok().json(vec![Insight {
+            message: format!(
+                "No testimonials responded in the last {}. Please choose greater duration.",
+                query.duration.clone().unwrap_or("day".to_string())
+            ),
+        }]);
+    }
+
     match repo.get_insights(testimonials).await {
-        Ok(films) => HttpResponse::Ok().json(films),
+        Ok(insights) => HttpResponse::Ok().json(insights),
         Err(e) => HttpResponse::NotFound().body(format!("Internal server error: {:?}", e)),
     }
 }

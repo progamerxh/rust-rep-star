@@ -34,7 +34,7 @@ async fn main() -> std::io::Result<()> {
         .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
 
     // Migrating the database
-    // MIGRATIONS.run(&pool).await.unwrap();
+    MIGRATIONS.run(&pool).await.unwrap();
 
     let testimonial_repository =
         api_lib::testimonial_repository::PostgresTestimonialRepository::new(pool.clone());

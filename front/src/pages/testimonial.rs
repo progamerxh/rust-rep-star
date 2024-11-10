@@ -1,6 +1,7 @@
 use crate::components::insight::InsightCard;
 use crate::components::insight_loader::InsightLoader;
 use crate::components::testimonial_list::TestimonialList;
+use crate::components::testimonial_loader::TestimonialLoader;
 use crate::components::time_duration_buttons::TimeDurationButtons;
 use crate::layouts::main::MainLayout;
 use crate::queries::insights::get_insights;
@@ -13,10 +14,10 @@ pub fn TestimonialsPage() -> Element {
     let testimonials = use_resource(move || get_testimonials());
     let mut insights = use_resource(move || get_insights(selected_duration.read().to_string()));
 
-    let Insight = match &*insights.read() {
+    let InsightBox = match &*insights.read() {
         Some(Ok(res)) => {
             rsx! {
-                div { class: "p-4",
+                div { class: "p-4 ",
                     for insight in res {
                         InsightCard { content: insight.message.clone() }
                     }
@@ -33,39 +34,39 @@ pub fn TestimonialsPage() -> Element {
         }
     };
 
-    match &*testimonials.read_unchecked() {
+    let TestimonialList = match &*testimonials.read() {
         Some(Ok(res)) => {
             rsx! {
-                MainLayout {
-                    div { class: "flex flex-col items-center justify-center space-y-4 mt-4",
-                        div { class: "p-4 bg-white shadow-lg rounded-lg w-full",
-                            p { class: "text-xl font-bold mb-2", "What our customers say" }
-                            TimeDurationButtons {
-                                on_select: move |value| {
-                                    selected_duration.set(value);
-                                    insights.clear();
-                                }
-                            }
-                            div { class: "p-4",
-                                {
-                                    Insight
-                                }
-                            }
-                        }
-                        div { class: "p-4 bg-white shadow-lg rounded-lg",
-                            TestimonialList { testimonials: res.clone() }
-                        }
-                    }
+                div {
+                    TestimonialList { testimonials: res.clone() }
                 }
             }
         }
         Some(Err(_)) => {
-            // if there was an error, render the error
             rsx! { "An error occurred while fetching stories " }
         }
         None => {
-            // if the future is not resolved yet, render a loading message
-            rsx! { "Loading items" }
+            rsx! {
+                TestimonialLoader {}
+            }
+        }
+    };
+
+    rsx! {
+        MainLayout {
+            div { class: "flex flex-col items-center justify-center space-y-4 mt-4",
+                div { class: "p-4 bg-gray-50 shadow-lg rounded-lg w-full",
+                    p { class: "text-xl font-bold mb-2", "What our customers say" }
+                    TimeDurationButtons {
+                        on_select: move |value| {
+                            selected_duration.set(value);
+                            insights.clear();
+                        }
+                    }
+                    div { class: "p-4", {InsightBox} }
+                }
+                div { class: "p-4 bg-gray-50 shadow-lg rounded-lg", {TestimonialList } }
+            }
         }
     }
 }
