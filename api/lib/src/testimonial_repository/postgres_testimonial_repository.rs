@@ -21,6 +21,7 @@ impl TestimonialRepository for PostgresTestimonialRepository {
             r#"
       SELECT id, content, rating, user_id, created_at, updated_at
       FROM testimonials
+      ORDER BY created_at DESC
       "#,
         )
         .fetch_all(&self.pool)
@@ -44,7 +45,8 @@ impl TestimonialRepository for PostgresTestimonialRepository {
             r#"
       SELECT id, content, rating, user_id, created_at, updated_at
       FROM testimonials
-      WHERE NOW() - created_at < $1::INTERVAL;
+      WHERE NOW() - created_at < $1::INTERVAL
+      ORDER BY created_at DESC;
       "#,
         )
         .bind(&interval)

@@ -62,5 +62,5 @@ GET {{host}}/api/v1/metrics/356e42a8-e659-406f-98 HTTP/1.1
 #####################
 
 ### get all insights
-@duration = month
+@duration = week
 GET {{host}}/api/v1/insights?duration={{duration}} HTTP/1.1

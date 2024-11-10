@@ -7,11 +7,12 @@ use crate::layouts::metric_tracking_wrapper::MetricTrackingWrapper;
 pub fn Testimonial(content: String, rating: f64, date: DateTime<Utc>) -> Element {
     rsx! {
         MetricTrackingWrapper { index: date.timestamp_millis(),
-            div { class: "border p-4 rounded shadow-md mb-4",
+            div { class: "border h-auto max-w-full rounded-lg p-4",
                 h3 { class: "text-md", "{content}" }
                 div { class: "flex",
                     if rating > 0.0 {
-                        {(0..rating.round() as usize).map(|_| rsx! {
+                        // Round the rating to the nearest half star
+                        {(0..(rating / 2.0).round() as usize).map(|_| rsx! {
                             span { class: "text-yellow-500", "★" }
                         })}
                     } else {

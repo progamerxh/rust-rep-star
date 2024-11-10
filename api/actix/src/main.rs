@@ -25,7 +25,7 @@ async fn main() -> std::io::Result<()> {
     }
 
     let pool = PgPoolOptions::new()
-        .max_connections(10)
+        .max_connections(1) // ollama local is quite slow
         .connect(&database_url)
         .await
         .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;

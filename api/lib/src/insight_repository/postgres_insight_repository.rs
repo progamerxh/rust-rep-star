@@ -15,15 +15,19 @@ impl PostgresInsightRepository {
 impl InsightRepository for PostgresInsightRepository {
     async fn get_insights(&self, testimonials: Vec<Testimonial>) -> InsightResult<Vec<Insight>> {
         let model = "llama3.2";
-        let assistant_prompt = "Act as a Customer Service Representative and summarize the provided feedback concisely in 20 words, highlighting key insights and areas for improvement for any business";
+        let assistant_prompt = "Act as a Customer Service Representative and summarize the provided feedback concisely in 20 words, highlighting key insights and areas for improvement for any business, return summary only.";
         let content_prompt = testimonials
             .iter()
             .map(|testimonial| testimonial.content.to_owned())
             .collect::<Vec<String>>()
             .join(" ");
 
+        let ollama_host =
+            std::env::var("OLLAMA_HOST").expect("OLLAMA_HOST must be set in the environment");
+
         // Ensure Ollama host is set
-        sqlx::query("SELECT set_config('ai.ollama_host', 'https://97d6-2405-4802-803b-9b20-a565-4d6c-bcea-d6a0.ngrok-free.app', false);")
+        sqlx::query(r#"SELECT set_config('ai.ollama_host', $1, false);"#)
+            .bind(&ollama_host)
             .fetch_all(&self.pool)
             .await
             .map_err(|e| e.to_string())?;

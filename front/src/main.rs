@@ -5,6 +5,7 @@ use crate::pages::{
 };
 use dioxus::prelude::*;
 use dioxus_logger::tracing::{info, Level};
+use layouts::main::MainLayout;
 
 mod components;
 mod layouts;
@@ -30,6 +31,6 @@ fn main() {
 
 fn App() -> Element {
     rsx! {
-        Router::<Route> {}
+        MainLayout { Router::<Route> {} }
     }
 }

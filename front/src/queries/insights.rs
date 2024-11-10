@@ -15,8 +15,9 @@ fn insights_endpoint() -> String {
     )
 }
 
-pub async fn get_insights() -> Result<Vec<Insight>, reqwest::Error> {
-    let response = reqwest::get(&insights_endpoint()).await?;
+pub async fn get_insights(duration: String) -> Result<Vec<Insight>, reqwest::Error> {
+    let url = format!("{}?duration={}", insights_endpoint(), duration);
+    let response = reqwest::get(&url).await?;
     let insights = response.json::<Vec<Insight>>().await?;
     Ok(insights)
 }
