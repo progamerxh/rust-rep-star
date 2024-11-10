@@ -8,10 +8,25 @@ pub static MIGRATIONS: Migrator = sqlx::migrate!("../migrations");
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    // loads env variables from .env
+    dotenv::dotenv().ok();
+    let database_url =
+        std::env::var("DATABASE_URL").expect("DATABASE_URL must be set in the environment");
+
+    // init tracing subscriber
+    let tracing = tracing_subscriber::fmt()
+        .with_timer(tracing_subscriber::fmt::time::UtcTime::rfc_3339())
+        .with_env_filter(tracing_subscriber::EnvFilter::from_default_env());
+
+    if cfg!(debug_assertions) {
+        tracing.pretty().init();
+    } else {
+        tracing.json().init();
+    }
+
     let pool = PgPoolOptions::new()
         .max_connections(10)
-        // .connect("postgresql://postgres:postgres@localhost:5432/rep-star")
-        .connect("postgresql://tsdbadmin:u1ttq9i4o6ex24db@bhrhgjuo9r.m19kjwh83w.tsdb.cloud.timescale.com:39098/tsdb")
+        .connect(&database_url)
         .await
         .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
 
@@ -37,6 +52,9 @@ async fn main() -> std::io::Result<()> {
     // building address
     let port = std::env::var("PORT").unwrap_or("8000".to_string());
     let address = format!("127.0.0.1:{}", port);
+
+    // static files
+    let static_folder = std::env::var("STATIC_FOLDER").unwrap_or("static".to_string());
 
     HttpServer::new(move || {
         // CORS
@@ -74,7 +92,7 @@ async fn main() -> std::io::Result<()> {
                     ),
             )
             .service(
-                Files::new("/", "static")
+                Files::new("/", &static_folder)
                     .show_files_listing()
                     .index_file("index.html"),
             )

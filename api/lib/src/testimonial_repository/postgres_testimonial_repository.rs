@@ -2,6 +2,7 @@ use super::{
     TestimonialEmbeddingRepository, TestimonialRepository, TestimonialResult, TimeDuration,
 };
 use shared::models::{CreateTestimonial, Testimonial};
+use sqlx::types::chrono;
 
 pub struct PostgresTestimonialRepository {
     pool: sqlx::PgPool,
@@ -72,14 +73,15 @@ impl TestimonialRepository for PostgresTestimonialRepository {
     ) -> TestimonialResult<Testimonial> {
         sqlx::query_as::<_, Testimonial>(
             r#"
-      INSERT INTO testimonials (content, rating, user_id)
-      VALUES ($1, $2, $3)
+      INSERT INTO testimonials (content, rating, user_id, created_at)
+      VALUES ($1, $2, $3, $4)
       RETURNING id, content, rating, user_id, created_at, updated_at
       "#,
         )
         .bind(&create_testimonial.content)
         .bind(&create_testimonial.rating)
         .bind(&create_testimonial.user_id)
+        .bind(create_testimonial.created_at.unwrap_or(chrono::Utc::now()))
         .fetch_one(&self.pool)
         .await
         .map_err(|e| e.to_string())

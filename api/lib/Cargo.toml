@@ -4,27 +4,21 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-# shared
-shared = { path = "../../shared", features = ["backend"] }
+shared = { workspace = true, features = ["backend"] }
+
+# db
+sqlx = { workspace = true }
 # actix
-actix-web = "4.9.0"
-# database
-sqlx = { version = "0.8.2", default-features = false, features = [
-    "tls-native-tls",
-    "macros",
-    "postgres",
-    "uuid",
-    "chrono",
-    "json",
-] }
-# tracing
-tracing = "0.1.40"
+actix-web = { workspace = true }
+# serde
+serde = { workspace = true }
+serde_json = "1.0.132"
 # utils
-async-trait = "0.1.82"
-uuid = { version = "1.11.0", features = ["serde", "v4", "js"] }
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
+uuid = { workspace = true }
+chrono = { workspace = true }
+async-trait = "0.1.83"
+tracing = { workspace = true }
 
 [dev-dependencies]
-actix-rt = "2.10.0"
+actix-rt = "2"
 

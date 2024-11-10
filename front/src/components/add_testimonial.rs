@@ -14,6 +14,7 @@ pub fn AddTestimonial() -> Element {
                 content: content.read().clone(),
                 rating: *rating.read(),
                 user_id: None,
+                created_at: None,
             })
             .await
             {

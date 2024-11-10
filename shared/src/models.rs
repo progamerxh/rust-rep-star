@@ -63,6 +63,7 @@ pub struct CreateTestimonial {
     pub content: String,
     pub rating: f64,
     pub user_id: Option<Uuid>,
+    pub created_at: Option<DateTime<Utc>>,
 }
 
 #[cfg_attr(feature = "backend", derive(sqlx::FromRow))]
