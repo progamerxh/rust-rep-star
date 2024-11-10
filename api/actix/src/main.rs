@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use actix_cors::Cors;
 use actix_files::Files;
 use actix_web::{self, web, App, HttpServer};
@@ -26,6 +28,7 @@ async fn main() -> std::io::Result<()> {
 
     let pool = PgPoolOptions::new()
         .max_connections(1) // ollama local is quite slow
+        .acquire_slow_threshold(Duration::from_secs(10))
         .connect(&database_url)
         .await
         .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;

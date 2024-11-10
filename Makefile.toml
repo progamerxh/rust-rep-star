@@ -1,9 +1,15 @@
 # project tasks
-[tasks.api-run]
+[tasks.api-shuttle]
 workspace = false
 env = { RUST_LOG = "info" }
 command = "shuttle"
 args = ["run"]
+
+[tasks.api-actix]
+workspace = false
+env = { RUST_LOG = "info" }
+command = "cargo"
+args = ["run", "--bin", "api-actix"]
 
 [tasks.front-serve]
 workspace = false
@@ -18,13 +24,16 @@ script_runner = "@shell"
 script = '''
 # shuttle issue with static files
 # location is different depending on the environment
-rm -rf api/server/static static
-mkdir api/server/static
+rm -rf api/shuttle/static static
+rm -rf api/actix/static static
+mkdir api/shuttle/static
+mkdir api/actix/static
 mkdir static
 cd front
 dx build --release
 # local development 
-cp -r dist/* ../api/server/static
+cp -r dist/* ../api/shuttle/static
+cp -r dist/* ../api/actix/static
 # production
 cp -r dist/* ../static
 '''

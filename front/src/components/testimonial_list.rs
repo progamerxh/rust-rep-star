@@ -10,7 +10,7 @@ pub fn TestimonialList(testimonials: Vec<shared::models::Testimonial>) -> Elemen
     rsx! {
         div { class: "grid grid-cols-2 md:grid-cols-3 gap-4",
             for chunk in chunked_testimonials.iter() {
-                div { class: "grid gap-2",
+                div { class: "grid gap-4",
                     for t in chunk.iter() {
                         Testimonial { content: t.content.clone(), rating: t.rating, date: t.created_at }
                     }
