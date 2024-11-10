@@ -68,5 +68,5 @@ pub struct CreateTestimonial {
 #[cfg_attr(feature = "backend", derive(sqlx::FromRow))]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Default)]
 pub struct Insight {
-    pub test: String,
+    pub message: String,
 }

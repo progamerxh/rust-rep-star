@@ -1,8 +1,8 @@
 #![allow(non_snake_case)]
 
-use crate::pages::add_testimonial::AddTestimonialPage;
-use crate::pages::home::HomePage;
-use crate::pages::testimonials::TestimonialsPage;
+use crate::pages::{
+    add_testimonial::AddTestimonialPage, home::HomePage, testimonial::TestimonialsPage,
+};
 use dioxus::prelude::*;
 use dioxus_logger::tracing::{info, Level};
 

@@ -8,7 +8,7 @@
         "type": "lldb",
         "request": "attach",
         "name": "Attach to API Rep Star",        
-        "program": "${workspaceFolder}/target/debug/api-rep-star",
+        "program": "${workspaceFolder}/target/debug/api-actix",
       }
     ]
   }

@@ -11,8 +11,8 @@ pub static MIGRATIONS: Migrator = sqlx::migrate!("../migrations");
 async fn server() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
     let pool = PgPoolOptions::new()
         .max_connections(10)
-        .connect("postgresql://postgres:postgres@localhost:5432/rep-star")
-        // .connect("postgresql://tsdbadmin:u1ttq9i4o6ex24db@bhrhgjuo9r.m19kjwh83w.tsdb.cloud.timescale.com:39098/tsdb")
+        // .connect("postgresql://postgres:postgres@localhost:5432/rep-star")
+        .connect("postgresql://tsdbadmin:u1ttq9i4o6ex24db@bhrhgjuo9r.m19kjwh83w.tsdb.cloud.timescale.com:39098/tsdb")
         .await
         .map_err(CustomError::new)?;
 
@@ -56,6 +56,7 @@ async fn server() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Cl
                 .configure(
                     api_lib::v1::insight::service::<
                         api_lib::insight_repository::PostgresInsightRepository,
+                        api_lib::testimonial_repository::PostgresTestimonialRepository,
                     >,
                 ),
         )

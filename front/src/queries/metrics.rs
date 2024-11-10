@@ -12,12 +12,6 @@ fn metrics_endpoint() -> String {
     format!("{}//{}/{}/{}", protocol, host, BASE_API_URL, METRIC_API)
 }
 
-pub async fn get_metrics() -> Result<Vec<Metric>, reqwest::Error> {
-    let response = reqwest::get(&metrics_endpoint()).await?;
-    let metrics = response.json::<Vec<Metric>>().await?;
-    Ok(metrics)
-}
-
 pub async fn create_metric(create_metric: CreateMetric) -> Result<Metric, reqwest::Error> {
     let response = reqwest::Client::new()
         .post(&metrics_endpoint())

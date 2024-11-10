@@ -1,8 +1,16 @@
 @host = http://localhost:8000
 @testimonial_id = 6f05e5f2-133c-11ee-be9f-0ab7e0d8c876
 
+#### Health API ####
+####################
 ### health
 GET {{host}}/health HTTP/1.1
+
+##########################
+
+
+#### Testimonials API ####
+##########################
 
 ### create testimonial
 POST {{host}}/api/v1/testimonials HTTP/1.1
@@ -30,9 +38,29 @@ GET {{host}}/api/v1/testimonials HTTP/1.1
 ### get testimonial
 GET {{host}}/api/v1/testimonials/{{testimonial_id}} HTTP/1.1
 
-### get bad testimonial
-GET {{host}}/api/v1/testimonials/356e42a8-e659-406f-98 HTTP/1.1
-
 
 ### delete testimonial
 DELETE {{host}}/api/v1/testimonials/{{testimonial_id}} HTTP/1.1
+
+##########################
+
+#### Metrics API ####
+#####################
+
+### get all metrics
+GET {{host}}/api/v1/metrics HTTP/1.1
+
+### get metric
+GET {{host}}/api/v1/metrics/1 HTTP/1.1
+
+### get bad metric
+GET {{host}}/api/v1/metrics/356e42a8-e659-406f-98 HTTP/1.1
+
+##########################
+
+### Insigths API ####
+#####################
+
+### get all insights
+@duration = month
+GET {{host}}/api/v1/insights?duration={{duration}} HTTP/1.1

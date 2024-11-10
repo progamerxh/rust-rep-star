@@ -331,6 +331,8 @@ dependencies = [
  "actix-rt",
  "actix-web",
  "async-trait",
+ "serde",
+ "serde_json",
  "shared",
  "sqlx",
  "tracing",

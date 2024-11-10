@@ -18,7 +18,7 @@ pub fn MetricTrackingWrapper(props: MetricTrackingWrapperProps) -> Element {
     let track_mouse_time = move |time: f64| {
         spawn(async move {
             if let Err(e) = create_metric(CreateMetric {
-                metric_type_id: Uuid::parse_str("539a0a5a-d9f3-4252-86d9-edd955a144b8").unwrap(),
+                metric_type_id: Uuid::parse_str("9ff7d3b0-11d5-450b-b0bf-92b312578fcb").unwrap(),
                 value: time,
             })
             .await

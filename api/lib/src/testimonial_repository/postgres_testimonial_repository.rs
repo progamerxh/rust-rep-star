@@ -1,4 +1,6 @@
-use super::{TestimonialRepository, TestimonialResult};
+use super::{
+    TestimonialEmbeddingRepository, TestimonialRepository, TestimonialResult, TimeDuration,
+};
 use shared::models::{CreateTestimonial, Testimonial};
 
 pub struct PostgresTestimonialRepository {
@@ -20,6 +22,31 @@ impl TestimonialRepository for PostgresTestimonialRepository {
       FROM testimonials
       "#,
         )
+        .fetch_all(&self.pool)
+        .await
+        .map_err(|e| e.to_string())
+    }
+
+    async fn get_testimonials_by_time_duration(
+        &self,
+        time_duration: TimeDuration,
+    ) -> TestimonialResult<Vec<Testimonial>> {
+        // deinfe Postgresql query based on time_duration utilizing built-in INTERVAL
+        let interval = match time_duration {
+            TimeDuration::LastDay => "1 day",
+            TimeDuration::LastWeek => "1 week",
+            TimeDuration::LastMonth => "1 month",
+            TimeDuration::LastYear => "1 year",
+        };
+
+        sqlx::query_as::<_, Testimonial>(
+            r#"
+      SELECT id, content, rating, user_id, created_at, updated_at
+      FROM testimonials
+      WHERE NOW() - created_at < $1::INTERVAL;
+      "#,
+        )
+        .bind(&interval)
         .fetch_all(&self.pool)
         .await
         .map_err(|e| e.to_string())
@@ -91,6 +118,25 @@ impl TestimonialRepository for PostgresTestimonialRepository {
       "#,
         )
         .bind(&testimonial_id)
+        .fetch_one(&self.pool)
+        .await
+        .map_err(|e| e.to_string())
+    }
+}
+
+#[async_trait::async_trait]
+impl TestimonialEmbeddingRepository for PostgresTestimonialRepository {
+    async fn embed_and_write(&self, testimonial: &Testimonial) -> TestimonialResult<Testimonial> {
+        sqlx::query_as::<_, Testimonial>(
+            r#"
+      INSERT INTO testimonials (content, rating, user_id)
+      VALUES ($1, $2, $3)
+      RETURNING id, content, rating, user_id, created_at, updated_at
+      "#,
+        )
+        .bind(&testimonial.content)
+        .bind(&testimonial.rating)
+        .bind(&testimonial.user_id)
         .fetch_one(&self.pool)
         .await
         .map_err(|e| e.to_string())
