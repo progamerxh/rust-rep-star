@@ -20,6 +20,7 @@ impl TestimonialRepository for PostgresTestimonialRepository {
       SELECT id, content, rating, user_id, created_at, updated_at
       FROM testimonials
       ORDER BY created_at DESC
+      LIMIT 50
       "#,
         )
         .fetch_all(&self.pool)

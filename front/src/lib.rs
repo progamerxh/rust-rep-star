@@ -9,7 +9,6 @@ mod components;
 mod layouts;
 mod pages;
 mod queries;
-mod utils;
 
 #[derive(Clone, Routable, Debug, PartialEq)]
 pub enum Route {

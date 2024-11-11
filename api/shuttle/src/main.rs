@@ -16,7 +16,7 @@ async fn server() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Cl
         std::env::var("DATABASE_URL").expect("DATABASE_URL must be set in the environment");
 
     let pool = PgPoolOptions::new()
-        .max_connections(5) // ollama local is quite slow
+        .max_connections(10) // ollama local is quite slow
         .acquire_slow_threshold(Duration::from_secs(10))
         .connect(&database_url)
         .await

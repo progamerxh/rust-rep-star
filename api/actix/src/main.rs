@@ -27,7 +27,7 @@ async fn main() -> std::io::Result<()> {
     }
 
     let pool = PgPoolOptions::new()
-        .max_connections(1) // ollama local is quite slow
+        .max_connections(10) // ollama local is quite slow
         .acquire_slow_threshold(Duration::from_secs(10))
         .connect(&database_url)
         .await
