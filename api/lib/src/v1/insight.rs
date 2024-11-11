@@ -18,11 +18,11 @@ pub fn service<R: InsightRepository, T: TestimonialRepository>(cfg: &mut Service
     cfg.service(
         web::scope("/v1/insights")
             // get all insights
-            .route("", web::get().to(get_all::<R, T>)),
+            .route("", web::get().to(get_testimonials_summary::<R, T>)),
     );
 }
 
-async fn get_all<R: InsightRepository, T: TestimonialRepository>(
+async fn get_testimonials_summary<R: InsightRepository, T: TestimonialRepository>(
     repo: web::Data<R>,
     testimonial_repo: web::Data<T>,
     query: web::Query<InsightQuery>,
@@ -50,7 +50,7 @@ async fn get_all<R: InsightRepository, T: TestimonialRepository>(
         }]);
     }
 
-    match repo.get_insights(testimonials).await {
+    match repo.get_testimonials_summary(testimonials).await {
         Ok(insights) => HttpResponse::Ok().json(insights),
         Err(e) => HttpResponse::NotFound().body(format!("Internal server error: {:?}", e)),
     }

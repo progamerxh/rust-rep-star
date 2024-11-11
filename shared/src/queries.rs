@@ -1,5 +1,8 @@
 use std::str::FromStr;
 
+use serde::{Deserialize, Serialize};
+use serde_urlencoded;
+
 #[derive(Debug, PartialEq)]
 pub enum TimeDuration {
     LastDay,
@@ -19,5 +22,16 @@ impl FromStr for TimeDuration {
             "year" => Ok(TimeDuration::LastYear),
             _ => Err(()),
         }
+    }
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct TestimonialQueries {
+    pub q: Option<String>,
+}
+
+impl TestimonialQueries {
+    pub fn to_query_string(&self) -> String {
+        serde_urlencoded::to_string(self).unwrap_or_default()
     }
 }

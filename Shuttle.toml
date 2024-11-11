@@ -1,1 +1,7 @@
 name = "rep-star"
+
+# Declare ignored files that should be included in deployment:
+[build]
+assets = [
+  "../static/*", # include all files and subdirs in static/
+]

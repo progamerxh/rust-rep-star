@@ -1,6 +1,4 @@
-use super::{
-    TestimonialEmbeddingRepository, TestimonialRepository, TestimonialResult, TimeDuration,
-};
+use super::{TestimonialRepository, TestimonialResult, TimeDuration};
 use shared::models::{CreateTestimonial, Testimonial};
 use sqlx::types::chrono;
 
@@ -24,6 +22,24 @@ impl TestimonialRepository for PostgresTestimonialRepository {
       ORDER BY created_at DESC
       "#,
         )
+        .fetch_all(&self.pool)
+        .await
+        .map_err(|e| e.to_string())
+    }
+
+    async fn get_testimonials_by_ids(
+        &self,
+        ids: Vec<uuid::Uuid>,
+    ) -> TestimonialResult<Vec<Testimonial>> {
+        sqlx::query_as::<_, Testimonial>(
+            r#"
+      SELECT id, content, rating, user_id, created_at, updated_at
+      FROM testimonials
+      WHERE id = ANY($1)
+      ORDER BY array_position($1::uuid[], id)
+      "#,
+        )
+        .bind(&ids)
         .fetch_all(&self.pool)
         .await
         .map_err(|e| e.to_string())
@@ -122,25 +138,6 @@ impl TestimonialRepository for PostgresTestimonialRepository {
       "#,
         )
         .bind(&testimonial_id)
-        .fetch_one(&self.pool)
-        .await
-        .map_err(|e| e.to_string())
-    }
-}
-
-#[async_trait::async_trait]
-impl TestimonialEmbeddingRepository for PostgresTestimonialRepository {
-    async fn embed_and_write(&self, testimonial: &Testimonial) -> TestimonialResult<Testimonial> {
-        sqlx::query_as::<_, Testimonial>(
-            r#"
-      INSERT INTO testimonials (content, rating, user_id)
-      VALUES ($1, $2, $3)
-      RETURNING id, content, rating, user_id, created_at, updated_at
-      "#,
-        )
-        .bind(&testimonial.content)
-        .bind(&testimonial.rating)
-        .bind(&testimonial.user_id)
         .fetch_one(&self.pool)
         .await
         .map_err(|e| e.to_string())

@@ -2,6 +2,13 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
+// ollama
+#[cfg_attr(feature = "backend", derive(sqlx::FromRow))]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, PartialOrd, Default)]
+pub struct OllamaEmbed {
+    pub ollama_embed: Vec<f64>,
+}
+
 #[cfg_attr(feature = "backend", derive(sqlx::FromRow))]
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Default)]
 pub struct MetricType {
@@ -64,6 +71,15 @@ pub struct CreateTestimonial {
     pub rating: f64,
     pub user_id: Option<Uuid>,
     pub created_at: Option<DateTime<Utc>>,
+}
+
+#[cfg_attr(feature = "backend", derive(sqlx::FromRow))]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, PartialOrd, Default)]
+pub struct TestimonialEmbedding {
+    pub id: i32,
+    pub testimonial_id: Uuid,
+    pub testimonial_content: String,
+    // pub embedding: Vec<f64>,
 }
 
 #[cfg_attr(feature = "backend", derive(sqlx::FromRow))]

@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use crate::components::insight::InsightCard;
 use crate::components::insight_loader::InsightLoader;
 use crate::components::testimonial_list::TestimonialList;
@@ -6,13 +8,26 @@ use crate::components::time_duration_buttons::TimeDurationButtons;
 use crate::layouts::main::MainLayout;
 use crate::queries::insights::get_insights;
 use crate::queries::testimonials::get_testimonials;
+use crate::utils::use_debounce;
 use dioxus::prelude::*;
+use shared::queries::TestimonialQueries;
 
 #[component]
-pub fn TestimonialsPage() -> Element {
+pub fn ManageTestimonialPage() -> Element {
+    let mut query_string = use_signal(|| "".to_owned());
+
     let mut selected_duration = use_signal(|| "day".to_owned());
-    let testimonials = use_resource(move || get_testimonials());
+    let mut testimonials = use_resource(move || {
+        get_testimonials(TestimonialQueries {
+            q: Some(query_string.read().clone()),
+        })
+    });
     let mut insights = use_resource(move || get_insights(selected_duration.read().to_string()));
+
+    let mut debounce_query = use_debounce(Duration::from_millis(500), move |text| {
+        query_string.set(text);
+        testimonials.clear();
+    });
 
     let InsightBox = match &*insights.read() {
         Some(Ok(res)) => {
@@ -38,7 +53,7 @@ pub fn TestimonialsPage() -> Element {
         Some(Ok(res)) => {
             rsx! {
                 div {
-                    TestimonialList { testimonials: res.clone() }
+                    TestimonialList { testimonials: res.clone(), cols: 3 }
                 }
             }
         }
@@ -64,6 +79,18 @@ pub fn TestimonialsPage() -> Element {
                         }
                     }
                     div { class: "p-4", {InsightBox} }
+                }
+                div { class: "p-4 bg-gray-50 shadow-lg rounded-lg w-full",
+                    p { class: "text-xl font-bold mb-2", "Search Testimonials" }
+                    input {
+                        class: "w-full p-2 border rounded",
+                        r#type: "text",
+                        placeholder: "Search...",
+                        oninput: move |event| {
+                            let value = event.value().clone();
+                            debounce_query.action(value);
+                        }
+                    }
                 }
                 div { class: "p-4 bg-gray-50 shadow-lg rounded-lg", {TestimonialList } }
             }

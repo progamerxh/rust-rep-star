@@ -35,6 +35,10 @@ impl FromStr for TimeDuration {
 #[async_trait]
 pub trait TestimonialRepository: Send + Sync + 'static {
     async fn get_testimonials(&self) -> TestimonialResult<Vec<Testimonial>>;
+    async fn get_testimonials_by_ids(
+        &self,
+        ids: Vec<uuid::Uuid>,
+    ) -> TestimonialResult<Vec<Testimonial>>;
     async fn get_testimonials_by_time_duration(
         &self,
         time_duration: TimeDuration,
@@ -48,5 +52,5 @@ pub trait TestimonialRepository: Send + Sync + 'static {
 // Embedding traits
 #[async_trait]
 pub trait TestimonialEmbeddingRepository: Send + Sync + 'static {
-    async fn embed_and_write(&self, id: &Testimonial) -> TestimonialResult<Testimonial>;
+    async fn embed_and_write(&self, t: &Testimonial) -> TestimonialResult<Testimonial>;
 }

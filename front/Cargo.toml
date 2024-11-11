@@ -9,9 +9,15 @@ shared = { workspace = true }
 # dioxus
 dioxus = { version = "0.5.6", features = ["web", "router"] }
 dioxus-web = "0.5.6"
+dioxus-sdk = { version = "0.5.1", features = [
+    "utils",
+], categories = [
+    "wasm",
+] }
 reqwest = { version = "0.12.9", features = ["json"] }
 serde = { workspace = true }
 uuid = { workspace = true }
+tokio = { workspace = true }
 log = "0.4.19"
 wasm-logger = "0.2.0"
 web-sys = "0.3.64"

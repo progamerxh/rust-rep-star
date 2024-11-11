@@ -16,6 +16,8 @@ sqlx = { version = "0.8.2", default-features = false, features = [
     "chrono",
     "json",
 ], optional = true }
+serde_urlencoded = "0.7.1"
+
 
 
 [features]

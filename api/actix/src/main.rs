@@ -40,6 +40,13 @@ async fn main() -> std::io::Result<()> {
         api_lib::testimonial_repository::PostgresTestimonialRepository::new(pool.clone());
     let testimonial_repository = actix_web::web::Data::new(testimonial_repository);
 
+    let testimonial_embedding_repository =
+        api_lib::testimonial_embedding_repository::PostgresTestimonialEmbeddingRepository::new(
+            pool.clone(),
+        );
+    let testimonial_embedding_repository =
+        actix_web::web::Data::new(testimonial_embedding_repository);
+
     let metric_repository = api_lib::metric_repository::PostgresMetricRepository::new(pool.clone());
     let metric_repository = actix_web::web::Data::new(metric_repository);
 
@@ -68,6 +75,7 @@ async fn main() -> std::io::Result<()> {
             .service(
                 web::scope("/api")
                     .app_data(testimonial_repository.clone())
+                    .app_data(testimonial_embedding_repository.clone())
                     .app_data(metric_repository.clone())
                     .app_data(user_repository.clone())
                     .app_data(insight_repository.clone())
@@ -75,6 +83,7 @@ async fn main() -> std::io::Result<()> {
                     .configure(
                         api_lib::v1::testimonial::service::<
                             api_lib::testimonial_repository::PostgresTestimonialRepository,
+                            api_lib::testimonial_embedding_repository::PostgresTestimonialEmbeddingRepository,
                         >,
                     )
                     .configure(

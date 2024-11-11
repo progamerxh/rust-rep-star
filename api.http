@@ -35,6 +35,10 @@ Content-Type: application/json
 ### get all testimonials
 GET {{host}}/api/v1/testimonials HTTP/1.1
 
+### get all testimonials with query params q
+@q = great
+GET {{host}}/api/v1/testimonials?q={{q}} HTTP/1.1
+
 ### get testimonial
 GET {{host}}/api/v1/testimonials/{{testimonial_id}} HTTP/1.1
 

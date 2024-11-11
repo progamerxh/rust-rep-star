@@ -6,17 +6,19 @@ pub fn HomePage() -> Element {
     rsx! {
         MainLayout {
             div { class: "flex flex-col items-center justify-center h-screen",
-                h1 { class: "text-4xl font-bold mb-4", "Welcome to the Testimonial Management App" }
+                h1 { class: "text-4xl font-bold mb-4", "Welcome to the Rep Star!" }
                 p { class: "text-lg mb-4", "Manage your testimonials with ease." }
                 Link {
-                    to: Route::TestimonialsPage {},
-                    class: "bg-blue-500 text-white px-4 py-2 rounded m-2",
-                    "View Testimonials"
+                    to: Route::ManageTestimonialPage {},
+                    class: "animate-pulse bg-gray-800 text-white px-4 py-2 rounded m-2",
+                    {},
+                    "Manage Page"
                 }
                 Link {
-                    to: Route::AddTestimonialPage {},
-                    class: "bg-green-500 text-white px-4 py-2 rounded m-2",
-                    "Add a Testimonial"
+                    to: Route::EmbedTestimonialPage {},
+                    class: "bg-gray-200 text-gray-800 px-4 py-2 rounded m-2",
+                    {},
+                    "Embed Page"
                 }
             }
         }

@@ -1,4 +1,7 @@
-use shared::models::{CreateTestimonial, Testimonial};
+use shared::{
+    models::{CreateTestimonial, Testimonial},
+    queries::TestimonialQueries,
+};
 
 use crate::queries::BASE_API_URL;
 pub static TESTIMONIAL_API: &str = "testimonials";
@@ -15,8 +18,12 @@ fn testimonials_endpoint() -> String {
     )
 }
 
-pub async fn get_testimonials() -> Result<Vec<Testimonial>, reqwest::Error> {
-    let response = reqwest::get(&testimonials_endpoint()).await?;
+pub async fn get_testimonials(
+    queries: TestimonialQueries,
+) -> Result<Vec<Testimonial>, reqwest::Error> {
+    // read and convert queries struct to query string format
+    let url = format!("{}?{}", testimonials_endpoint(), queries.to_query_string());
+    let response = reqwest::get(&url).await?;
     let testimonials = response.json::<Vec<Testimonial>>().await?;
     Ok(testimonials)
 }

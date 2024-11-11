@@ -1,3 +1,3 @@
-pub mod add_testimonial;
+pub mod embed_testimonial;
 pub mod home;
-pub mod testimonial;
+pub mod manage_testimonial;

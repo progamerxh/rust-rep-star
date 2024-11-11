@@ -1,3 +1,4 @@
+#![allow(non_snake_case)]
 use dioxus::prelude::*;
 
 use crate::Route;
@@ -17,8 +18,8 @@ pub fn MainLayout(props: MainLayoutProps) -> Element {
                 }
                 nav {
                     ul { class: "flex space-x-4 flex-row",
-                        Link { to: Route::TestimonialsPage {}, "Testimonials" }
-                        Link { to: Route::AddTestimonialPage {}, "Add Testimonial" }
+                        Link { to: Route::ManageTestimonialPage {}, "Manage" }
+                        Link { to: Route::EmbedTestimonialPage {}, "Embed" }
                     }
                 }
             }

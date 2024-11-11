@@ -346,11 +346,22 @@ dependencies = [
  "actix-files",
  "actix-web",
  "api-lib",
+ "dotenv",
  "shuttle-actix-web",
  "shuttle-runtime",
  "sqlx",
  "tokio",
  "tracing",
+]
+
+[[package]]
+name = "async-broadcast"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7c48ccdbf6ca6b121e0f586cbc0e73ae440e56c67c30fa0873b4e110d9c26d2b"
+dependencies = [
+ "event-listener 2.5.3",
+ "futures-core",
 ]
 
 [[package]]
@@ -1281,6 +1292,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "dioxus-sdk"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "28df53f8e819a1417224ca1c671947ed8fc9696e3080fd59d166c2162c7287bc"
+dependencies = [
+ "async-broadcast",
+ "cfg-if",
+ "dioxus",
+ "js-sys",
+ "tracing",
+ "uuid",
+]
+
+[[package]]
 name = "dioxus-signals"
 version = "0.5.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1435,6 +1460,12 @@ dependencies = [
 
 [[package]]
 name = "event-listener"
+version = "2.5.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0206175f82b8d6bf6652ff7d71a1e27fd2e4efde587fd368662814d6ec1d9ce0"
+
+[[package]]
+name = "event-listener"
 version = "5.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6032be9bd27023a771701cc49f9f053c751055f71efb2e0ae5c15809093675ba"
@@ -1450,7 +1481,7 @@ version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0f214dc438f977e6d4e3500aaa277f5ad94ca83fbbd9b1a15713ce2344ccc5a1"
 dependencies = [
- "event-listener",
+ "event-listener 5.3.1",
  "pin-project-lite",
 ]
 
@@ -1531,6 +1562,7 @@ dependencies = [
  "chrono",
  "dioxus",
  "dioxus-logger",
+ "dioxus-sdk",
  "dioxus-web",
  "futures",
  "log",
@@ -1539,6 +1571,7 @@ dependencies = [
  "serde",
  "serde_json",
  "shared",
+ "tokio",
  "uuid",
  "wasm-logger",
  "web-sys",
@@ -3802,6 +3835,7 @@ dependencies = [
  "chrono",
  "serde",
  "serde_json",
+ "serde_urlencoded",
  "sqlx",
  "uuid",
 ]
@@ -4114,7 +4148,7 @@ dependencies = [
  "crc",
  "crossbeam-queue",
  "either",
- "event-listener",
+ "event-listener 5.3.1",
  "futures-channel",
  "futures-core",
  "futures-intrusive",

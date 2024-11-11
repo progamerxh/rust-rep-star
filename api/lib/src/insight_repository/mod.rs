@@ -8,5 +8,9 @@ pub type InsightResult<T> = Result<T, InsightError>;
 
 #[async_trait]
 pub trait InsightRepository: Send + Sync + 'static {
-    async fn get_insights(&self, testimonials: Vec<Testimonial>) -> InsightResult<Vec<Insight>>;
+    async fn get_testimonials_summary(
+        &self,
+        testimonials: Vec<Testimonial>,
+    ) -> InsightResult<Vec<Insight>>;
+    async fn get_metrics_summary(&self, metrics: Vec<String>) -> InsightResult<Vec<Insight>>;
 }
