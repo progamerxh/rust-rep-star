@@ -7,7 +7,6 @@ use crate::layouts::main::MainLayout;
 use crate::queries::insights::get_insights;
 use crate::queries::testimonials::get_testimonials;
 use dioxus::prelude::*;
-use dioxus_logger::tracing::info;
 use shared::queries::TestimonialQueries;
 
 #[component]
